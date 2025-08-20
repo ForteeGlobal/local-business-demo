@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mascot Plumbing Co.</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+  // Simple placeholder image as an inline SVG encoded as a data URI.
+  const PLACEHOLDER = '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#F3F3F3"/><text x="50%" y="50%" fill="#999" font-family="Arial, Helvetica, sans-serif" font-size="24" dominant-baseline="middle" text-anchor="middle">Image</text></svg>';
+  const PLACEHOLDER_URI = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(PLACEHOLDER);
+
+  // Registry for remote images.  You can override these values by
+  // setting `window.__SITE_IMAGES__` before the DOM content loads.
+  const DEFAULT_IMAGES = {
+    hero: 'https://images.unsplash.com/photo-1594642610473-86843b3d8f63?auto=format&fit=crop&w=1600&q=60',
+    gallery1: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=60',
+    gallery2: 'https://images.unsplash.com/photo-1558898363-9d98eaeedb20?auto=format&fit=crop&w=800&q=60',
+    gallery3: 'https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&w=800&q=60',
+    location: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=800&q=60'
+  };
+
+  // Returns the URI for a given key.  If the global object has an
+  // override, it will be used; otherwise the default is used.  If
+  // neither exists, the placeholder is returned.
+  function getImg(key) {
+    if (typeof window !== 'undefined' && window.__SITE_IMAGES__ && window.__SITE_IMAGES__[key]) {
+      return window.__SITE_IMAGES__[key];
+    }
+    return DEFAULT_IMAGES[key] || PLACEHOLDER_URI;
+  }
+
+  // Attach fallback behaviour to an image element.  When the image
+  // fails to load, its src will be replaced with the placeholder.
+  function attachFallback(img) {
+    img.onerror = function() {
+      this.onerror = null; // prevent infinite loop if placeholder fails
+      this.src = PLACEHOLDER_URI;
+    };
+  }
+
+  // When the page is ready, initialise images with the appropriate
+  // remote URIs and fallback behaviour.
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('img[data-key]').forEach(function(img) {
+      const key = img.dataset.key;
+      img.src = getImg(key);
+      attachFallback(img);
+    });
+  });
+  </script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-content">
+      <h1>Mascot Plumbing Co.</h1>
+      <p>Your local plumbing experts. Reliable, affordable services for residential and commercial properties.</p>
+      <a href="#contact" class="btn">Get a Quote</a>
+    </div>
+    <img data-key="hero" alt="Plumber working" class="hero-image">
+  </header>
+
+  <section class="services">
+    <h2>Our Services</h2>
+    <div class="service-cards">
+      <div class="card">
+        <h3>Emergency Plumbing</h3>
+        <p>24/7 emergency plumbing services to fix leaks, bursts and other urgent issues.</p>
+      </div>
+      <div class="card">
+        <h3>Bathroom Renovation</h3>
+        <p>From design to installation, we transform your bathroom with quality workmanship.</p>
+      </div>
+      <div class="card">
+        <h3>Kitchen Plumbing</h3>
+        <p>Installation and repairs for sinks, faucets, dishwashers and more.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery">
+    <h2>Recent Projects</h2>
+    <div class="gallery-images">
+      <img data-key="gallery1" alt="Bathroom renovation project">
+      <img data-key="gallery2" alt="Kitchen plumbing project">
+      <img data-key="gallery3" alt="Pipe repair project">
+    </div>
+  </section>
+
+  <section class="location">
+    <h2>Our Location</h2>
+    <div class="location-container">
+      <img data-key="location" alt="Our shop location">
+      <div class="location-info">
+        <p>123 Example Street, Mascot NSW 2020</p>
+        <p>Open Monday – Saturday, 8&nbsp;am – 6&nbsp;pm</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <form action="https://formspree.io/f/your_form_id" method="POST">
+      <input type="text" name="name" placeholder="Your name" required>
+      <input type="email" name="_replyto" placeholder="Email address" required>
+      <textarea name="message" placeholder="How can we help?" required></textarea>
+      <button type="submit" class="btn">Send</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Mascot Plumbing Co. All rights reserved.</p>
+  </footer>
+</body>
+</html>
